@@ -114,7 +114,7 @@ X_feat_np = np.array(X_feat_dict_list,dtype=np.float32)
 # print(X_feat_dict_list)
 print(f'Numpy array : {X_feat_np}')
 
-file_path = 'model\moz_svm.pkl'
+file_path = 'model/moz_svm.pkl'
 with open(file_path,'rb') as file:
     loaded_model = pickle.load(file)
 X_feat_np=X_feat_np.reshape(1,-1)
