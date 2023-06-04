@@ -2,3 +2,6 @@
 /model/model_lr.pkl
 /get-pip.py
 /requirements copy.txt
+/model/moz_svm.pkl
+/model/moz_lr.pkl
+/requirements.txt

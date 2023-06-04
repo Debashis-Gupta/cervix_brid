@@ -23,7 +23,7 @@ num_preg = st.number_input("Num of pregnancies",value=0)
 smoker = st.selectbox("Do you smoke? Please Select '0' for 'NO' OR '1' for 'YES'",choices,label_visibility='visible')
 if smoker!=0:
     num_smokes = st.number_input("Enter the number of years",value=0)
-    num_smokes_per_year = st.number_input("Enter the number of years",value=0)
+    num_smokes_per_year = st.number_input("Enter the number of years")
 else:
     num_smokes=0.0
     num_smokes_per_year=0.0
@@ -114,7 +114,7 @@ X_feat_np = np.array(X_feat_dict_list,dtype=np.float32)
 # print(X_feat_dict_list)
 print(f'Numpy array : {X_feat_np}')
 
-file_path = 'model/model_lr2.pkl'
+file_path = 'model\moz_svm.pkl'
 with open(file_path,'rb') as file:
     loaded_model = pickle.load(file)
 X_feat_np=X_feat_np.reshape(1,-1)
@@ -147,12 +147,14 @@ print(f"Shape of X_feat_np : {X_feat_np.shape}")
 # print(f"X_train_transform:{X_train_transform}")
 # print(X_train_transform.shape)
 trad_y_pred = loaded_model.predict(X_feat_np)
+trad_y_pred_probability = loaded_model.predict_proba(X_feat_np)
+print(f"Probability : {trad_y_pred_probability}")
 print(f"Traditional Prediction: {trad_y_pred}")
-print(f'type of {type(trad_y_pred)}')
+# print(f'type of {type(trad_y_pred)}')
 if trad_y_pred == 0:
-    trad_pred = "Negative"
+    trad_pred = False
 else:
-    trad_pred = "Positive"
+    trad_pred = True
 # st.dataframe(X_feat)
 
 
@@ -190,14 +192,25 @@ if file is not None:
     class_name, conf_score = classify_image(image,model, class_names)
 
     if class_name == 'Parabasal':
-        cv_pred = "Negative"
+        cv_pred = False
     else:
-        cv_pred = "Positive"
+        cv_pred = True 
     #write classification
 
+
+    if(trad_pred==True and cv_pred==True):
+        final_prediction='Positive'
+    elif(trad_pred==False and cv_pred==False):
+        final_prediction='Negative'
+    elif(trad_pred==True and cv_pred==False):
+        final_prediction='Negative'
+    else:
+        final_prediction='Positive'
+
+
+
     result = {
-        'Traditional Machine Learning Prediction': trad_pred,
-        'Deep Learning Based Prediction': cv_pred
+        'Final Output': final_prediction
     }
     js_data = js.dumps(result)
     st.json(js_data)
